@@ -5,14 +5,15 @@ RSpec.describe Book, type: :model do
 
   describe "#rating_average" do
     it "retorna 'Reseñas Insuficientes' si hay menos de 3 reseñas válidas" do
-      book = Book.create!(title: "Libro X")
+      book = Book.create!(title: "Libro X", author: "Autor X")
+
       2.times { book.reviews.create!(rating: 4, user: user) }
 
       expect(book.rating_average).to eq("Reseñas Insuficientes")
     end
 
     it "calcula el promedio con una décima" do
-      book = Book.create!(title: "Libro Y")
+      book = Book.create!(title: "Libro Y", author: "Autor Y")
       book.reviews.create!(rating: 5, user: user)
       book.reviews.create!(rating: 4, user: user)
       book.reviews.create!(rating: 3, user: user)
@@ -23,7 +24,7 @@ RSpec.describe Book, type: :model do
     it "excluye reseñas de usuarios baneados" do
       banned_user = User.create!(email: "bad@test.com", banned: true)
 
-      book = Book.create!(title: "Libro Z")
+      book = Book.create!(title: "Libro Z", author: "Autor Z")
       book.reviews.create!(rating: 5, user: user)
       book.reviews.create!(rating: 1, user: banned_user)
       book.reviews.create!(rating: 4, user: user)
