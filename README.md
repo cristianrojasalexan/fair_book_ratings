@@ -79,30 +79,6 @@ rails db:migrate
 bundle exec rspec
 ```
 
-## 🚀 Instalación
-
-### 1. Clonar el repositorio
-```bash
-git clone https://github.com/tu-usuario/book-review-system.git
-cd book-review-system
-```
-
-### 2. Instalar dependencias
-```bash
-bundle install
-```
-
-### 3. Configurar la base de datos
-```bash
-rails db:create
-rails db:migrate
-```
-
-### 4. Ejecutar los tests
-```bash
-bundle exec rspec
-```
-
 ## 📁 Estructura del Proyecto
 
 ```
