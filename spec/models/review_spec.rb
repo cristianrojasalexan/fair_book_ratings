@@ -1,39 +1,63 @@
 require 'rails_helper'
 
 RSpec.describe Review, type: :model do
-  describe "validations" do
-    it "requiere una calificación" do
-      review = Review.new(rating: nil)
+  describe 'validaciones' do
+    it 'es válido con atributos correctos' do
+      review = build(:review, content: :content, rating: 4)
+      expect(review).to be_valid
+    end
+
+    it 'es válido con calificaciones entre 1 y 5' do
+      expect(build(:review, rating: 0)).not_to be_valid
+      expect(build(:review, rating: 6)).not_to be_valid
+      expect(build(:review, rating: 3)).to be_valid
+    end
+
+    it 'no es válido sin calificación' do
+      review = build(:review, rating: nil)
       expect(review).not_to be_valid
       expect(review.errors[:rating]).to include("can't be blank")
     end
 
-    it "requiere una calificación entre 1 y 5" do
-      user = User.create!(email: "test@gmail.com", banned: false)
-      book = Book.create!(title: "Libro X", author: "Autor X")
-
-      expect(Review.new(rating: 0, user: user, book: book)).not_to be_valid
-      expect(Review.new(rating: 6, user: user, book: book)).not_to be_valid
-      expect(Review.new(rating: 3, user: user, book: book)).to be_valid
+    it 'no es válido con limite de contenido mayor a 1000 caracteres' do
+      review = build(:review, :long_content)
+      expect(review).not_to be_valid
+      expect(review.errors[:content]).to be_present
     end
 
-    it "limita el contenido a 1000 caracteres" do
-      long_text = "a" * 1001
-      review = Review.new(rating: 3, content: long_text)
+    it 'es válido con una reseña exactamente con 1000 caracteres' do
+      text = "a" * 1000
+      review = build(:review, content: text)
+      expect(review).to be_valid
+    end
+
+    it 'es válido con contenido nil' do
+      review = build(:review, content: nil)
+      expect(review).to be_valid
+    end
+
+    it 'no es válido usuario nil' do
+      review = build(:review, user: nil)
       expect(review).not_to be_valid
-      expect(review.errors[:content]).to include("is too long (maximum is 1000 characters)")
+      expect(review.errors[:user]).to be_present
+    end
+
+    it 'no es válido libro nil' do
+      review = build(:review, book: nil)
+      expect(review).not_to be_valid
+      expect(review.errors[:book]).to be_present
     end
   end
 
-  describe "banned users" do
+  describe '#from_banned_user?' do
+    it 'retorna true si el usuario está baneado' do
+      review = create(:review, :from_banned_user)
+      expect(review.from_banned_user?).to be true
+    end
 
-    it "marca reseñas de usuarios baneados como excluidas del promedio" do
-      banned_user = User.create!(banned: true, email: "test@gmail.com")
-      book = Book.create!(title: "Libro X", author: "Author X")
-
-      review = Review.new(rating: 5, user: banned_user, book: book)
-
-      expect(review.counts_for_average?).to eq(false)
+    it 'retorna false si el usuario no está baneado' do
+      review = create(:review)
+      expect(review.from_banned_user?).to be false
     end
   end
 end

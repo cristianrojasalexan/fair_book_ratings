@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :book do
-    title { "MyString" }
-    author { "MyString" }
+    sequence(:title) { |n| "Book #{n}" }
+    sequence(:author) { |n| "Author #{n}" }
   end
 end

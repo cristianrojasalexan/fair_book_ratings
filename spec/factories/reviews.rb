@@ -1,8 +1,16 @@
 FactoryBot.define do
   factory :review do
-    user { nil }
-    book { nil }
-    rating { 1 }
-    content { "MyText" }
+    association :book
+    association :user
+    rating { rand(1..5) }
+    content { 'Good book' }
+
+    trait :from_banned_user do
+      association :user, factory: [:user, :banned]
+    end
+
+    trait :long_content do
+      content { 'a' * 1001 }
+    end
   end
 end

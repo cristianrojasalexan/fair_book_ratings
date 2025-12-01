@@ -63,7 +63,9 @@ group :development do
   # gem "spring"
   gem "rspec-rails"
   gem "factory_bot_rails"
-  gem "pry-rails"
+  gem "rubocop", require: false
+  gem "rubocop-rails", require: false
+  gem "rubocop-rspec", require: false
 end
 
 group :test do
@@ -72,6 +74,4 @@ group :test do
   gem "selenium-webdriver"
   gem "rspec-rails"
   gem "factory_bot_rails"
-  gem "faker"
-  gem "pry-rails"
 end
